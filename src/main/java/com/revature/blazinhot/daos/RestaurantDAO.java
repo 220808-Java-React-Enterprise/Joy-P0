@@ -1,9 +1,9 @@
-package com.revature.yolp.daos;
+package com.revature.blazinhot.daos;
 
-import com.revature.yolp.models.Restaurant;
-import com.revature.yolp.models.User;
-import com.revature.yolp.utils.custom_exceptions.InvalidSQLException;
-import com.revature.yolp.utils.database.ConnectionFactory;
+import com.revature.blazinhot.models.Restaurant;
+import com.revature.blazinhot.models.User;
+import com.revature.blazinhot.utils.custom_exceptions.InvalidSQLException;
+import com.revature.blazinhot.utils.database.ConnectionFactory;
 
 import javax.xml.transform.Result;
 import java.sql.Connection;

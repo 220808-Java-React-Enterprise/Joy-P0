@@ -1,4 +1,4 @@
-package com.revature.yolp.utils.database;
+package com.revature.blazinhot.utils.database;
 
 import java.io.FileReader;
 import java.io.IOException;

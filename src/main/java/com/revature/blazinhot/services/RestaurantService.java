@@ -1,7 +1,7 @@
-package com.revature.yolp.services;
+package com.revature.blazinhot.services;
 
-import com.revature.yolp.daos.RestaurantDAO;
-import com.revature.yolp.models.Restaurant;
+import com.revature.blazinhot.daos.RestaurantDAO;
+import com.revature.blazinhot.models.Restaurant;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.revature.yolp.services;
+package com.revature.blazinhot.services;
 
-import com.revature.yolp.daos.ReviewDAO;
-import com.revature.yolp.models.Review;
+import com.revature.blazinhot.daos.ReviewDAO;
+import com.revature.blazinhot.models.Review;
 
 import java.util.List;
 

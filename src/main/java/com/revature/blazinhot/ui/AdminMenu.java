@@ -1,7 +1,7 @@
-package com.revature.yolp.ui;
+package com.revature.blazinhot.ui;
 
-import com.revature.yolp.models.User;
-import com.revature.yolp.services.UserService;
+import com.revature.blazinhot.models.User;
+import com.revature.blazinhot.services.UserService;
 
 public class AdminMenu implements IMenu {
     private final User user;

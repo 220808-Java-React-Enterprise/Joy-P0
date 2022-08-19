@@ -1,11 +1,11 @@
-package com.revature.yolp.ui;
+package com.revature.blazinhot.ui;
 
-import com.revature.yolp.models.Restaurant;
-import com.revature.yolp.models.Review;
-import com.revature.yolp.models.User;
-import com.revature.yolp.services.RestaurantService;
-import com.revature.yolp.services.ReviewService;
-import com.revature.yolp.services.UserService;
+import com.revature.blazinhot.models.Restaurant;
+import com.revature.blazinhot.models.Review;
+import com.revature.blazinhot.models.User;
+import com.revature.blazinhot.services.RestaurantService;
+import com.revature.blazinhot.services.ReviewService;
+import com.revature.blazinhot.services.UserService;
 
 import java.util.List;
 import java.util.Scanner;

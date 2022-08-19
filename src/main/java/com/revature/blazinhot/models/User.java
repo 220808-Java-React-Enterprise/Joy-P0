@@ -1,26 +1,29 @@
-package com.revature.yolp.models;
+package com.revature.blazinhot.models;
 
 public class User {
     private String id;
     private String username;
     private String password;
     private String role = "DEFAULT";
+    private String email;
 
     public User() {
 
     }
 
-    public User(String id, String username, String password) {
+    public User(String id, String username, String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.email = email;
     }
 
-    public User(String id, String username, String password, String role) {
+    public User(String id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
+        this.email = email;
     }
 
     public String getId() {
@@ -41,6 +44,14 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setPassword(String password) {

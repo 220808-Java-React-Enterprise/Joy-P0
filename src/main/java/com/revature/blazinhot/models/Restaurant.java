@@ -1,4 +1,4 @@
-package com.revature.yolp.models;
+package com.revature.blazinhot.models;
 
 public class Restaurant {
     private String id;

@@ -1,9 +1,9 @@
-package com.revature.yolp;
+package com.revature.blazinhot;
 
-import com.revature.yolp.daos.UserDAO;
-import com.revature.yolp.services.UserService;
-import com.revature.yolp.ui.LoginMenu;
-import com.revature.yolp.utils.database.ConnectionFactory;
+import com.revature.blazinhot.daos.UserDAO;
+import com.revature.blazinhot.services.UserService;
+import com.revature.blazinhot.ui.LoginMenu;
+import com.revature.blazinhot.utils.database.ConnectionFactory;
 
 import java.sql.SQLException;
 

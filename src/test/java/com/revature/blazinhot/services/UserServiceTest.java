@@ -1,8 +1,8 @@
-package com.revature.yolp.services;
+package com.revature.blazinhot.services;
 
-import com.revature.yolp.daos.UserDAO;
-import com.revature.yolp.models.User;
-import com.revature.yolp.utils.custom_exceptions.InvalidUserException;
+import com.revature.blazinhot.daos.UserDAO;
+import com.revature.blazinhot.models.User;
+import com.revature.blazinhot.utils.custom_exceptions.InvalidUserException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

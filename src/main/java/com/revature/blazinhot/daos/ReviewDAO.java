@@ -1,8 +1,8 @@
-package com.revature.yolp.daos;
+package com.revature.blazinhot.daos;
 
-import com.revature.yolp.models.Review;
-import com.revature.yolp.utils.custom_exceptions.InvalidSQLException;
-import com.revature.yolp.utils.database.ConnectionFactory;
+import com.revature.blazinhot.models.Review;
+import com.revature.blazinhot.utils.custom_exceptions.InvalidSQLException;
+import com.revature.blazinhot.utils.database.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

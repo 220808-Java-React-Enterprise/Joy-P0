@@ -1,8 +1,8 @@
-package com.revature.yolp.daos;
+package com.revature.blazinhot.daos;
 
-import com.revature.yolp.models.User;
-import com.revature.yolp.utils.custom_exceptions.InvalidSQLException;
-import com.revature.yolp.utils.database.ConnectionFactory;
+import com.revature.blazinhot.models.User;
+import com.revature.blazinhot.utils.custom_exceptions.InvalidSQLException;
+import com.revature.blazinhot.utils.database.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,15 +15,17 @@ public class UserDAO implements CrudDAO<User> {
     @Override
     public void save(User obj) {
         try (Connection con = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO users (id, username, password, role) VALUES (?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO users (id, username, password, email, role) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, obj.getId());
             ps.setString(2, obj.getUsername());
             ps.setString(3, obj.getPassword());
-            ps.setString(4, obj.getRole());
+            ps.setString(4, obj.getEmail());
+            ps.setString(5, obj.getRole());
             ps.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new InvalidSQLException("An error occurred when tyring to save to the database.");
-        }
+        } catch (NullPointerException e) {}
     }
 
     @Override
@@ -66,6 +68,21 @@ public class UserDAO implements CrudDAO<User> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) return rs.getString("username");
+
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An error occurred when tyring to save to the database.");
+        }
+
+        return null;
+    }
+
+    public String getEmail(String email) {
+        try (Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT (email) FROM users WHERE email = ?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) return rs.getString("email");
 
         } catch (SQLException e) {
             throw new InvalidSQLException("An error occurred when tyring to save to the database.");
