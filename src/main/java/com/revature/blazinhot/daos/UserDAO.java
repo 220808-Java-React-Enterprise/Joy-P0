@@ -15,12 +15,13 @@ public class UserDAO implements CrudDAO<User> {
     @Override
     public void save(User obj) {
         try (Connection con = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO users (id, username, password, email, role) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO users (id, username, password, email, cart_id , role) VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, obj.getId());
             ps.setString(2, obj.getUsername());
             ps.setString(3, obj.getPassword());
             ps.setString(4, obj.getEmail());
-            ps.setString(5, obj.getRole());
+            ps.setString(5, obj.getCart_id());
+            ps.setString(6, obj.getRole());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,7 +47,7 @@ public class UserDAO implements CrudDAO<User> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("role"));
+                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("email"), rs.getString("cart_id"), rs.getString("role"));
             }
 
         } catch (SQLException e) {
@@ -99,7 +100,7 @@ public class UserDAO implements CrudDAO<User> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next())
-                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("role"));
+                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("cart_id"), rs.getString("role"));
         } catch (SQLException e) {
             throw new InvalidSQLException("An error occurred when tyring to save to the database.");
         }

@@ -33,6 +33,17 @@ public class HotsauceDAO implements CrudDAO<Hotsauce> {
 
     @Override
     public Hotsauce getById(String id) {
+        try (Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM hotsauces WHERE id = ?");
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Hotsauce(rs.getString("id"), rs.getString("name"), rs.getString("spiciness"), rs.getDouble("price"));
+            }
+        } catch (SQLException e) {
+            throw new InvalidSQLException("An error occurred when tyring to save to the database.");
+        }
         return null;
     }
 

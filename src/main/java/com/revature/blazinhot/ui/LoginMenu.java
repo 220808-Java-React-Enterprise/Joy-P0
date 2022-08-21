@@ -1,11 +1,11 @@
 package com.revature.blazinhot.ui;
 
-import com.revature.blazinhot.daos.RestaurantDAO;
-import com.revature.blazinhot.daos.ReviewDAO;
+import com.revature.blazinhot.daos.HotsauceDAO;
+import com.revature.blazinhot.daos.OrderDao;
 import com.revature.blazinhot.daos.UserDAO;
 import com.revature.blazinhot.models.User;
-import com.revature.blazinhot.services.RestaurantService;
-import com.revature.blazinhot.services.ReviewService;
+import com.revature.blazinhot.services.HotsauceService;
+import com.revature.blazinhot.services.OrderService;
 import com.revature.blazinhot.services.UserService;
 import com.revature.blazinhot.utils.custom_exceptions.InvalidUserException;
 
@@ -44,7 +44,7 @@ public class LoginMenu implements IMenu {
                         User user = signup();
                         userService.register(user);
                         try {
-                            new MainMenu(user, new UserService(new UserDAO()), new RestaurantService(new RestaurantDAO()), new ReviewService(new ReviewDAO())).start();
+                            new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao())).start();
                         } catch (NullPointerException e) {}
                         break;
                     case "x":
@@ -91,7 +91,7 @@ public class LoginMenu implements IMenu {
                 try {
                     User user = userService.login(username, password);
                     if (user.getRole().equals("ADMIN")) new AdminMenu(user, new UserService(new UserDAO())).start();
-                    else new MainMenu(user, new UserService(new UserDAO()), new RestaurantService(new RestaurantDAO()), new ReviewService(new ReviewDAO())).start();
+                    else new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao())).start();
                     break exit;
                 } catch (InvalidUserException e) {
                     System.out.println(e.getMessage());
@@ -187,7 +187,8 @@ public class LoginMenu implements IMenu {
 
                         switch (scan.nextLine().toLowerCase()) {
                             case "y":
-                                user = new User(UUID.randomUUID().toString(), username, password, email);
+                                user = new User(UUID.randomUUID().toString(), username, password, email, UUID.randomUUID().toString());
+                                System.out.println(user);
                                 return user;
                             case "n":
                                 System.out.println("\nRestarting...");
