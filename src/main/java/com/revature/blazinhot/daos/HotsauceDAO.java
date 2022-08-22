@@ -1,7 +1,6 @@
 package com.revature.blazinhot.daos;
 
 import com.revature.blazinhot.models.Hotsauce;
-import com.revature.blazinhot.models.Restaurant;
 import com.revature.blazinhot.models.User;
 import com.revature.blazinhot.utils.custom_exceptions.InvalidSQLException;
 import com.revature.blazinhot.utils.database.ConnectionFactory;

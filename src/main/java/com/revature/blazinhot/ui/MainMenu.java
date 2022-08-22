@@ -95,7 +95,7 @@ public class MainMenu implements IMenu {
                 System.out.print("\nSelect a spiciness level");
                 System.out.println("\n[1] Mild\n[2] Medium\n[3] Hot\n[4] Extra Hot\n[5] Extremely Hot");
                 System.out.print("\nEnter: ");
-                int level = scan.nextInt();
+                int level = Integer.parseInt(scan.nextLine());
 
                 String spiciness = "";
 
@@ -124,7 +124,8 @@ public class MainMenu implements IMenu {
 
                 System.out.println("\nViewing all " + spiciness + " sauces\n");
                 for (int i = 0; i < hotsauces.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + hotsauces.get(i).getName() + "- $" + hotsauces.get(i).getPrice());
+                    System.out.print("[" + (i + 1) + "] " + hotsauces.get(i).getName() + "- $");
+                    System.out.printf("%.2f\n", hotsauces.get(i).getPrice());
                 }
 
                 Hotsauce hotsauce = null;
@@ -132,14 +133,16 @@ public class MainMenu implements IMenu {
                 {
                     while (true) {
                         System.out.print("\nSelect a hotsauce to purchase: ");
-                        scan.nextLine();
+                        //scan.nextLine();
                         String input = scan.nextLine();
                         int selection = 0;
+
                         if(input.equals("quit")){
                             break selectionExit;
                         }
                         else if (input.matches("[1-9]")){
-                            selection = Integer.parseInt(input);
+                            selection = Integer.parseInt(input) - 1;
+                            //System.out.println(selection);
                         }
                         try{
                             hotsauce = hotsauces.get(selection);
@@ -157,7 +160,7 @@ public class MainMenu implements IMenu {
                     while(true) {
                         System.out.print("\nHow many would you like? (Enter 0 to cancel): ");
 
-                        amount = scan.nextInt();
+                        amount = Integer.parseInt(scan.nextLine());
 
                         if (amount < 0) {
                             System.out.println("Invalid amount!");
@@ -174,17 +177,26 @@ public class MainMenu implements IMenu {
                 confirmationExit:
                 {
                     while(true) {
-                        System.out.println("Are you sure you want to add " + amount + " '" + hotsauce.getName() + "' to cart for $" + amount * hotsauce.getPrice() + "? [y/n]");
+                        assert hotsauce != null;
+                        System.out.printf("\nAre you sure you want to add %d '%s' to cart for $ %.2f? [y/n]\n", amount, hotsauce.getName(), amount * hotsauce.getPrice());
                         System.out.print("Enter: ");
 
                         String confirmation = scan.nextLine();
                         switch (confirmation) {
                             case "y":
-                                Order order = new Order(UUID.randomUUID().toString(), user.getId(), hotsauce.getId(), user.getCart_id(), amount, amount * hotsauce.getPrice());
-                                orderService.saveOrder(order);
+                                Order order = orderService.getOrderIfAlreadyExistsInCart(hotsauce.getId(), user.getCart_id());
+                                if(order == null) {
+                                    //System.out.println(user.getCart_id());
+                                    Order newOrder = new Order(UUID.randomUUID().toString(), user.getId(), hotsauce.getId(), user.getCart_id(), amount, amount * hotsauce.getPrice());
+                                    orderService.saveOrder(newOrder);
+                                }
+                                else{
+                                    System.out.println(order + " " + amount);
+                                    orderService.addToExistingOrder(order.getId(), order.getAmount() + amount, (order.getAmount() + amount) * hotsauce.getPrice());
+                                }
                                 break confirmationExit;
                             case "n":
-                                System.out.print("Order has been cancelled!");
+                                System.out.println("Order has been cancelled!");
                                 break confirmationExit;
                             default:
                                 System.out.println("\nInvalid input!");

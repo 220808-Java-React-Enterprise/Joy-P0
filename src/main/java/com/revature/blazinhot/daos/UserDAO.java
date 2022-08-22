@@ -100,7 +100,7 @@ public class UserDAO implements CrudDAO<User> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next())
-                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString("cart_id"), rs.getString("role"));
+                return new User(rs.getString("id"), rs.getString("username"), rs.getString("password"), rs.getString(("email")) ,rs.getString("cart_id"), rs.getString("role"));
         } catch (SQLException e) {
             throw new InvalidSQLException("An error occurred when tyring to save to the database.");
         }

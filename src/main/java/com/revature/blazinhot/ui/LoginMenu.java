@@ -90,6 +90,7 @@ public class LoginMenu implements IMenu {
 
                 try {
                     User user = userService.login(username, password);
+                    System.out.println(user);
                     if (user.getRole().equals("ADMIN")) new AdminMenu(user, new UserService(new UserDAO())).start();
                     else new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao())).start();
                     break exit;
