@@ -1,5 +1,8 @@
 package com.revature.blazinhot.models;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 public class Order {
     private String id;
     private String user_id;
@@ -7,6 +10,8 @@ public class Order {
     private String cart_id;
     private int amount;
     private double total;
+    private LocalDateTime timestamp;
+    private String transaction_id;
 
     public Order(String id, String user_id, String hotsauce_id, String cart_id, int amount, double total) {
         this.id = id;
@@ -15,6 +20,37 @@ public class Order {
         this.amount = amount;
         this.total = total;
         this.cart_id = cart_id;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                ", hotsauce_id='" + hotsauce_id + '\'' +
+                ", cart_id='" + cart_id + '\'' +
+                ", amount=" + amount +
+                ", total=" + total +
+                ", timestamp=" + timestamp +
+                ", transaction_id='" + transaction_id + '\'' +
+                '}';
+    }
+
+    public String getTransaction_id() {
+        return transaction_id;
+    }
+
+    public void setTransaction_id(String transaction_id) {
+        this.transaction_id = transaction_id;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -63,18 +99,6 @@ public class Order {
 
     public void setTotal(double total) {
         this.total = total;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id='" + id + '\'' +
-                ", user_id='" + user_id + '\'' +
-                ", hotsauce_id='" + hotsauce_id + '\'' +
-                ", cart_id='" + cart_id + '\'' +
-                ", amount=" + amount +
-                ", total=" + total +
-                '}';
     }
 
 }

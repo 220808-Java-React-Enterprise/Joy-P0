@@ -1,13 +1,16 @@
 package com.revature.blazinhot.ui;
 
 import com.revature.blazinhot.daos.OrderDao;
+import com.revature.blazinhot.daos.TransactionDAO;
+import com.revature.blazinhot.daos.WarehouseDAO;
 import com.revature.blazinhot.models.Hotsauce;
 import com.revature.blazinhot.models.Order;
 import com.revature.blazinhot.models.User;
-import com.revature.blazinhot.services.HotsauceService;
-import com.revature.blazinhot.services.OrderService;
-import com.revature.blazinhot.services.UserService;
+import com.revature.blazinhot.models.Warehouse;
+import com.revature.blazinhot.services.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -17,12 +20,14 @@ public class MainMenu implements IMenu {
     private final UserService userService;
     private final HotsauceService hotService;
     private final OrderService orderService;
+    private final WarehouseService warehouseService;
 
-    public MainMenu(User user, UserService userService, HotsauceService hotService, OrderService orderService) {
+    public MainMenu(User user, UserService userService, HotsauceService hotService, OrderService orderService, WarehouseService warehouseService) {
         this.user = user;
         this.userService = userService;
         this.hotService = hotService;
         this.orderService = orderService;
+        this.warehouseService = warehouseService;
     }
 
     @Override
@@ -60,12 +65,50 @@ public class MainMenu implements IMenu {
 
     private void viewOrderHistory(){
         Scanner scan = new Scanner(System.in);
-        List<Order> orders = orderService.getAllOrdersByUser(user.getId());
+        System.out.println("Choose date to view order history");
+        List<Timestamp> dates = orderService.getAllOrderDatesByUser(user.getId());
 
-        for(Order order : orders) {
-            Hotsauce hotsauce = hotService.getHotsauceById(order.getHotsauce_id());
-            System.out.println(order.getAmount() + " '" + hotsauce.getName() + "' - " + order.getTotal());
+        for(int i = 0; i < dates.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + dates.get(i).toString());
         }
+
+        System.out.print("Enter: ");
+
+        Timestamp stamp;
+
+        selectionExit:
+        {
+            while (true) {
+                String input = scan.nextLine();
+                int selection = -1;
+
+                if (input.equals("quit")) {
+                    return;
+                } else if (input.matches("^[1-9]$")) {
+                    selection = Integer.parseInt(input) - 1;
+                }
+
+                try {
+                    stamp = dates.get(selection);
+                    break selectionExit;
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Invalid Selection! Type 'quit' to cancel");
+                }
+            }
+        }
+
+        List<Order> datedOrders = orderService.getAllOrdersByUserAndDate(user.getId(), stamp);
+
+        System.out.println("Orders purchased on " + stamp.toString());
+        double total = 0;
+        for(Order order : datedOrders) {
+            total += order.getTotal();
+            Hotsauce hotsauce = hotService.getHotsauceById(order.getHotsauce_id());
+            System.out.print("\t" + order.getAmount() + " '" + hotsauce.getName() + "' - ");
+            System.out.printf("$%.2f\n", order.getTotal());
+        }
+
+        System.out.printf("Total: $%.2f\n", total);
 
         orderHistoryBreak:
         {
@@ -83,7 +126,7 @@ public class MainMenu implements IMenu {
     }
 
     private void viewCart(){
-        new CartMenu(user, orderService, hotService).start();
+        new CartMenu(user, orderService, hotService, new WarehouseService(new WarehouseDAO()), new TransactionService(new TransactionDAO())).start();
     }
 
     private void viewHotsauces() {
@@ -124,31 +167,43 @@ public class MainMenu implements IMenu {
 
                 System.out.println("\nViewing all " + spiciness + " sauces\n");
                 for (int i = 0; i < hotsauces.size(); i++) {
-                    System.out.print("[" + (i + 1) + "] " + hotsauces.get(i).getName() + "- $");
-                    System.out.printf("%.2f\n", hotsauces.get(i).getPrice());
+                    System.out.print("[" + (i + 1) + "] " + hotsauces.get(i).getName() + " $");
+                    System.out.printf("%.2f ", hotsauces.get(i).getPrice());
+                    Warehouse warehouse = warehouseService.getWarehouseByHotsauceId(hotsauces.get(i).getId());
+                    System.out.println("\n\tIn-stock: " + warehouse.getQuantity());
                 }
 
                 Hotsauce hotsauce = null;
+                int stock = 0;
                 selectionExit:
                 {
                     while (true) {
-                        System.out.print("\nSelect a hotsauce to purchase: ");
+                        System.out.print("\nSelect a hotsauce to purchase (q for quit): ");
                         //scan.nextLine();
                         String input = scan.nextLine();
-                        int selection = 0;
+                        int selection = -1;
 
-                        if(input.equals("quit")){
-                            break selectionExit;
+                        if(input.equals("q")){
+                            break exit;
                         }
-                        else if (input.matches("[1-9]")){
+                        else if (input.matches("^[1-9]$")){
                             selection = Integer.parseInt(input) - 1;
                             //System.out.println(selection);
                         }
+
                         try{
                             hotsauce = hotsauces.get(selection);
-                            break selectionExit;
                         } catch (IndexOutOfBoundsException e) {
-                            System.out.println("Invalid Selection! Type 'quit' to cancel");
+                            System.out.println("Invalid Selection! Type 'q' to cancel");
+                        }
+
+                        Warehouse warehouse = warehouseService.getWarehouseByHotsauceId(hotsauce.getId());
+                        stock = warehouse.getQuantity();
+                        if(stock == 0){
+                            System.out.println("Sorry! This product is currently not available. Please choose another product or wait for more stock to become available.");
+                        }
+                        else{
+                            break selectionExit;
                         }
                     }
                 }
@@ -160,13 +215,22 @@ public class MainMenu implements IMenu {
                     while(true) {
                         System.out.print("\nHow many would you like? (Enter 0 to cancel): ");
 
-                        amount = Integer.parseInt(scan.nextLine());
+                        try{
+                            amount = Integer.parseInt(scan.nextLine());
+                        } catch (Exception e){
+                            System.out.println("Please enter a number.");
+                            break;
+                        }
 
                         if (amount < 0) {
                             System.out.println("Invalid amount!");
                         }
                         else if(amount == 0){
                             break exit;
+                        }
+                        else if(amount > stock){
+                            System.out.println("Sorry! There is not enough stock for that amount. Please choose a different amount equal to or less then the amount currently in-stock");
+                            break;
                         }
                         else{
                             break amountExit;
@@ -191,7 +255,7 @@ public class MainMenu implements IMenu {
                                     orderService.saveOrder(newOrder);
                                 }
                                 else{
-                                    System.out.println(order + " " + amount);
+                                    //System.out.println(order + " " + amount);
                                     orderService.addToExistingOrder(order.getId(), order.getAmount() + amount, (order.getAmount() + amount) * hotsauce.getPrice());
                                 }
                                 break confirmationExit;

@@ -19,4 +19,8 @@ public class HotsauceService {
     public Hotsauce getHotsauceById(String hotsauce_id){
         return hotDAO.getById(hotsauce_id);
     }
+
+    public List<Hotsauce> getAll() {
+        return hotDAO.getAll();
+    }
 }

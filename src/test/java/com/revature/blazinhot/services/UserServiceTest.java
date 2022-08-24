@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Arrays;
+import java.util.UUID;
+
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
@@ -35,7 +38,7 @@ public class UserServiceTest {
     @Test
     public void test_isValidUsername_givenCorrectUsername() {
         // Arrange
-        String validUsername = "bduong0929";
+        String validUsername = "baowow123";
 
         // Act
         boolean flag = sut.isValidUsername(validUsername);
@@ -47,7 +50,7 @@ public class UserServiceTest {
     @Test(expected = InvalidUserException.class)
     public void test_isNotValidUsername_givenInCorrectUsername() {
         // Arrange
-        String invalidUsername = "bduong";
+        String invalidUsername = "2short";
 
         // Act
         sut.isValidUsername(invalidUsername);
@@ -74,7 +77,7 @@ public class UserServiceTest {
     @Test(expected = InvalidUserException.class)
     public void test_isNotValidUsername_startingWithUnderscore() {
         // Arrange
-        String invalidUsername = "_bduong0929";
+        String invalidUsername = "_baowow123";
 
         // Act
         sut.isValidUsername(invalidUsername);
@@ -84,7 +87,7 @@ public class UserServiceTest {
     public void test_login_validLoginGivenCorrectCredentials() {
         // Arrange
         UserService spiedSut = Mockito.spy(sut);
-        String validUsername = "bduong0929";
+        String validUsername = "baowow123";
         String validPassword = "Passw0rd";
         when(spiedSut.isValidUsername(validUsername)).thenReturn(true);
         when(spiedSut.isValidPassword(validPassword)).thenReturn(true);
@@ -108,5 +111,14 @@ public class UserServiceTest {
 
         // Act
         sut.login(invalidUsername, invalidPassword);
+    }
+
+    @Test
+    public void test_getUserById(){
+        UserService spiedSut = Mockito.spy(sut);
+        when(mockUserDao.getById("1")).thenReturn(new User("1", "user", "pass", "email.com", "cart"));
+
+        User user = spiedSut.getUserById("1");
+        Assert.assertNotNull(user);
     }
 }

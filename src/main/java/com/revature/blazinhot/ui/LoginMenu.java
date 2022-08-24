@@ -3,10 +3,12 @@ package com.revature.blazinhot.ui;
 import com.revature.blazinhot.daos.HotsauceDAO;
 import com.revature.blazinhot.daos.OrderDao;
 import com.revature.blazinhot.daos.UserDAO;
+import com.revature.blazinhot.daos.WarehouseDAO;
 import com.revature.blazinhot.models.User;
 import com.revature.blazinhot.services.HotsauceService;
 import com.revature.blazinhot.services.OrderService;
 import com.revature.blazinhot.services.UserService;
+import com.revature.blazinhot.services.WarehouseService;
 import com.revature.blazinhot.utils.custom_exceptions.InvalidUserException;
 
 import java.util.List;
@@ -44,7 +46,7 @@ public class LoginMenu implements IMenu {
                         User user = signup();
                         userService.register(user);
                         try {
-                            new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao())).start();
+                            new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao()), new WarehouseService(new WarehouseDAO())).start();
                         } catch (NullPointerException e) {}
                         break;
                     case "x":
@@ -90,9 +92,9 @@ public class LoginMenu implements IMenu {
 
                 try {
                     User user = userService.login(username, password);
-                    System.out.println(user);
-                    if (user.getRole().equals("ADMIN")) new AdminMenu(user, new UserService(new UserDAO())).start();
-                    else new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao())).start();
+                    //System.out.println(user);
+                    if (user.getRole().equals("ADMIN")) new AdminMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new WarehouseService(new WarehouseDAO())).start();
+                    else new MainMenu(user, new UserService(new UserDAO()), new HotsauceService(new HotsauceDAO()), new OrderService(new OrderDao()), new WarehouseService(new WarehouseDAO())).start();
                     break exit;
                 } catch (InvalidUserException e) {
                     System.out.println(e.getMessage());
@@ -189,7 +191,7 @@ public class LoginMenu implements IMenu {
                         switch (scan.nextLine().toLowerCase()) {
                             case "y":
                                 user = new User(UUID.randomUUID().toString(), username, password, email, UUID.randomUUID().toString());
-                                System.out.println(user);
+                                //System.out.println(user);
                                 return user;
                             case "n":
                                 System.out.println("\nRestarting...");
